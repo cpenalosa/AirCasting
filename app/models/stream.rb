@@ -148,8 +148,8 @@ class Stream < ActiveRecord::Base
   def self.sensors
     joins(:session).
       where("sessions.contribute" => true).
-      select("sensor_name, measurement_type, threshold_very_low, threshold_low, unit_symbol,
-           threshold_medium, threshold_high, threshold_very_high, count(*) as session_count").
+      select("sensor_name, measurement_type, ANY_VALUE(threshold_very_low) as threshold_very_low, ANY_VALUE(threshold_low) as threshold_low, unit_symbol,
+           ANY_VALUE(threshold_medium) as threshold_medium, ANY_VALUE(threshold_high) as threshold_high, ANY_VALUE(threshold_very_high) as threshold_very_high, count(*) as session_count").
       group(:sensor_name, :measurement_type, :unit_symbol).
       map { |stream| stream.attributes.symbolize_keys }
   end
